@@ -1,5 +1,5 @@
 from instan.config import DATABASE_URI
-from models import Base, Teacher, Student, Class, Attendance, Grade
+from application.database.models import Base, Student, Teacher, _Class, Attendance
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from flask import jsonify
