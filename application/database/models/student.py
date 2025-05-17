@@ -5,7 +5,7 @@ from sqlalchemy.orm import *
 class Student(Person):
     __tablename__ = "Student"
 
-    class_id = Column(Integer, ForeignKey("_Class.id"), )
+    class_id = Column(Integer, ForeignKey("Class.id"), )
     _class = relationship("_Class", back_populates="students")
 
     attendances = relationship("Attendance", back_populates="student")
