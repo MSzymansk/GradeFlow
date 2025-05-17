@@ -1,16 +1,14 @@
-from sqlalchemy import *
-from sqlalchemy.orm import *
-from application.database.models import Base
+from application.app import db
 
-class _Class(Base):
+class _Class(db.Model):
     __tablename__ = "Class"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(10), nullable=False)
-    year = Column(Date, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(10), nullable=False)
+    year = db.Column(db.Date, nullable=False)
 
-    teacher_id = Column(Integer, ForeignKey("Teacher.id"))
-    teacher = relationship("Teacher", uselist=False, back_populates="_class")
+    teacher_id = db.Column(db.Integer, db.ForeignKey("Teacher.id"))
+    teacher = db.relationship("Teacher", uselist=False, back_populates="_class")
 
-    students = relationship("Student", uselist=True, back_populates="_class")
-    attendances = relationship("Attendance", uselist=True, back_populates="_class")
+    students = db.relationship("Student", back_populates="_class")
+    attendances = db.relationship("Attendance", back_populates="_class")

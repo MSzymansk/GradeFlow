@@ -1,13 +1,10 @@
-from sqlalchemy import *
-from sqlalchemy.orm import *
-from application.database.models import Base
+from application.app import db
 
 
-class Person(Base):
+class Person(db.Model):
     __abstract__ = True
-    __allow__unmapped__ = True
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    pesel = Column(Integer, nullable=False)
-    name = Column(String(30), nullable=False)
-    surname = Column(String(30), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    pesel = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(30), nullable=False)
+    surname = db.Column(db.String(30), nullable=False)
