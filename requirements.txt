@@ -1,2 +1,4 @@
 SQLAlchemy
-Flaske3 nalezy do python
+Flask
+SQLite3
+Flask-SQLAlchemy

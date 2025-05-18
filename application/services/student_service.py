@@ -1,16 +1,8 @@
-from instan.config import DATABASE_URI
-from models import Base, Teacher, Student, Class, Attendance, Grade
-from sqlalchemy import *
-from sqlalchemy.orm import *
+from application.database.models import Student
 from flask import jsonify
+from sqlalchemy import *
 
 
-def init_database():
-    engine = create_engine(f'sqlite:///{DATABASE_URI}', echo=True)
-    Base.metadata.create_all(engine)
-
-
-# Students
 def get_all_students(session):
     students = session.query(Student).all()
     students_list = [
@@ -76,4 +68,3 @@ def delete_student(session, student_id: int):
     session.execute(stmt)
     session.commit()
     return jsonify({"message": f"Student with ID {student_id} deleted"}), 200
-
