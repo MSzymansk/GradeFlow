@@ -1,11 +1,12 @@
-from application.database.models import Student
+from application.database.models import Student, Grade
 from flask import jsonify
 from sqlalchemy import *
 
 
+
 def get_all_students(session):
     students = session.query(Student).all()
-    students_list = [
+    return [
         {
             "id": student.id,
             "pesel": student.pesel,
@@ -13,10 +14,8 @@ def get_all_students(session):
             "surname": student.surname,
             "class_id": student.class_id
         }
-        for student in students
+            for student in students
     ]
-    return jsonify(students_list), 200
-
 
 def get_all_students_class(session, class_id: int):
     students = session.query(Student).filter(Student.class_id == class_id).all()
@@ -54,8 +53,8 @@ def get_student(session, student_id: int):
 def add_student(session, pesel: int, name: str, surname: str, class_id: int):
     stmt = insert(Student).values(pesel=pesel, name=name, surname=surname, class_id=class_id).returning(Student.id)
     result = session.execute(stmt)
-    session.commit()
     new_id = result.scalar_one()
+    session.commit()
     return jsonify({"message": "Student added successfully", "student_id": new_id}), 201
 
 

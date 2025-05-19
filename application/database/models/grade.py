@@ -1,4 +1,5 @@
-from application.app import db
+from application.extensions import db
+
 
 class Grade(db.Model):
     __tablename__ = "Grade"

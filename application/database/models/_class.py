@@ -1,4 +1,5 @@
-from application.app import db
+from application.extensions import db
+
 
 class _Class(db.Model):
     __tablename__ = "Class"

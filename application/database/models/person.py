@@ -1,4 +1,4 @@
-from application.app import db
+from application.extensions import db
 
 
 class Person(db.Model):
