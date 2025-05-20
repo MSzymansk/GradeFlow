@@ -3,7 +3,6 @@ from flask import jsonify
 from sqlalchemy import *
 
 
-
 def get_all_students(session):
     students = session.query(Student).all()
     return [
@@ -14,8 +13,9 @@ def get_all_students(session):
             "surname": student.surname,
             "class_id": student.class_id
         }
-            for student in students
+        for student in students
     ]
+
 
 def get_all_students_class(session, class_id: int):
     students = session.query(Student).filter(Student.class_id == class_id).all()
@@ -50,8 +50,8 @@ def get_student(session, student_id: int):
     return jsonify(student_data), 200
 
 
-def add_student(session, pesel: int, name: str, surname: str, class_id: int):
-    stmt = insert(Student).values(pesel=pesel, name=name, surname=surname, class_id=class_id).returning(Student.id)
+def add_student_to_db(session, new_student: Student):
+    stmt = insert(Student).values(pesel=new_student.pesel, name=new_student.name, surname=new_student.surname, class_id=new_student.class_id).returning(Student.id)
     result = session.execute(stmt)
     new_id = result.scalar_one()
     session.commit()
