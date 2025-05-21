@@ -7,7 +7,7 @@ from application.services import student_service
 from application.extensions import db
 from flask import render_template
 
-from application.services.student_service import add_student_to_db
+from application.services.student_service import *
 
 students_bp = Blueprint("students", __name__, url_prefix="/students")
 
@@ -37,6 +37,29 @@ def add_student():
             class_id=int(json['class_id'])
         )
         return add_student_to_db(db.session, new_student)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
+
+@students_bp.route('/delete', methods=["POST"])
+def delete_student():
+    json = request.get_json()
+    try:
+        return delete_student_from_db(db.session, json['id'])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@students_bp.route('/update', methods=["PUT"])
+def update_student():
+    json = request.get_json()
+    try:
+        new_student = Student(
+            name=json['name'],
+            surname=json['surname'],
+            pesel=json['pesel'],
+            class_id=int(json['class_id'])
+        )
+        return update_student_in_db(db.session, json['id'], new_student)
     except Exception as e:
         return jsonify({"error": str(e)}), 400
