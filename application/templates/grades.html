@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista ocen</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+
+        .buttons button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .open-form-button {
+            background: #cccccc;
+            color: black;
+        }
+
+        .buttons label {
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .buttons input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 60%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .form-buttons button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Nagłówek i filtr klasy -->
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+    <h1 style="margin: 0;">Lista ocen</h1>
+    <div>
+        <label for="class-filter"><strong>Klasa:</strong></label>
+        <select id="class-filter" onchange="filterByClass()">
+            <option value="all">Wszystkie</option>
+            {% for class in classes %}
+            <option value="{{ class.id }}">{{ class.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<!-- Przycisk do otwierania formularzy -->
+<div class="buttons">
+    <button onclick="openGradeAddForm()" class="open-form-button">Wystaw ocenę</button>
+    <button onclick="openGradeDeleteForm()" class="open-form-button">Usuń ocenę</button>
+    <label>
+        <input type="checkbox" id="show-failure" onclick="toggleFailures()" />
+        Pokaż zagrożenia
+    </label>
+</div>
+
+<!-- Modal do dodawania oceny -->
+<div id="grade-add-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeGradeAddForm()">&times;</span>
+        <h2>Dodaj ocenę</h2>
+        <form id="grade-add-form" onsubmit="return addGradeToDb()">
+            <div class="form-group">
+                <label for="student-name">Imię ucznia:</label>
+                <input type="text" id="student-name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="student-surname">Nazwisko ucznia:</label>
+                <input type="text" id="student-surname" name="surname" required>
+            </div>
+            <div class="form-group">
+                <label for="grade-value">Wartość oceny:</label>
+                <input type="text" id="grade-value" name="value" required>
+            </div>
+            <div class="form-group">
+                <label for="grade-type">Typ oceny:</label>
+                <select id="grade-type" name="type" required>
+                    <option value="" disabled selected>Wybierz typ oceny</option>
+                    <option value="Sprawdzian">Sprawdzian</option>
+                    <option value="Kartkówka">Kartkówka</option>
+                    <option value="Odpowiedź ustna">Odpowiedź ustna</option>
+                </select>
+            </div>
+            <div class="form-buttons">
+                <button type="submit">Dodaj</button>
+                <button type="button" class="cancel-btn" onclick="closeGradeAddForm()">Anuluj</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal do usuwania oceny -->
+<div id="grade-delete-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeGradeDeleteForm()">&times;</span>
+        <h2>Usuń ocenę</h2>
+        <form id="grade-delete-form" onsubmit="return deleteGradeFromDb()">
+            <div class="form-group">
+                <label for="grade-id">ID oceny:</label>
+                <input type="text" id="grade-id" name="id" required>
+            </div>
+            <div class="form-buttons">
+                <button type="submit" class="cancel-btn">Usuń</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Tabela z ocenami -->
+<table>
+    <thead>
+    <tr>
+        <th></th>
+        <th>ID oceny</th>
+        <th>Wartość</th>
+        <th>Typ</th>
+        <th>Imię ucznia</th>
+        <th>Nazwisko ucznia</th>
+        <th>Nazwa klasy</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for grade in grades %}
+    <tr data-class-id="{{ grade.class_id }}">
+        <td>
+            <button onclick="enableEdit(this)">Edytuj</button>
+        </td>
+        <td>{{ grade.id }}</td>
+        <td>{{ grade.value }}</td>
+        <td>{{ grade.type }}</td>
+        <td>{{ grade.student_name }}</td>
+        <td>{{ grade.student_surname }}</td>
+        <td>{{ grade.class_name }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script src="{{ url_for('static', filename='grade_actions.js') }}"></script>
+
+</body>
+</html>
