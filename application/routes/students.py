@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, redirect, url_for
 
-from application.database.models import Student
+from application.routes.auth import login_required
 from application.services import grades_service
 from application.services import student_service
 
@@ -27,6 +27,7 @@ def get_class_grades(id):
 
 
 @students_bp.route("/add", methods=["POST"])
+@login_required
 def add_student():
     json = request.get_json()
     try:
@@ -42,6 +43,7 @@ def add_student():
 
 
 @students_bp.route('/delete', methods=["POST"])
+@login_required
 def delete_student():
     json = request.get_json()
     try:
@@ -51,6 +53,7 @@ def delete_student():
 
 
 @students_bp.route('/update', methods=["PUT"])
+@login_required
 def update_student():
     json = request.get_json()
     try:

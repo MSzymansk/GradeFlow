@@ -1,4 +1,8 @@
-from application.database.models import Grade, Student
+from pyclbr import Class
+
+from sqlalchemy.orm import selectinload
+
+from application.database.models import Grade, Student, _Class
 
 
 def get_class_grade(session,class_id):
@@ -15,3 +19,25 @@ def get_class_grade(session,class_id):
             "avg": avg,
         })
     return res
+
+def get_all_students_grades_by_class_request(session):
+    classes = session.query(_Class).options(
+        selectinload(_Class.students).selectinload(Student.grades)
+    ).all()
+
+    return [
+        {
+            "classId": c.id,
+            "className": c.name,
+            "students": [
+                {
+                    "studentId": s.id,
+                    "studentName": s.name,
+                    "studentSurname": s.surname,
+                    "grades": [g.value for g in s.grades]
+                }
+                for s in c.students
+            ]
+        }
+        for c in classes
+    ]

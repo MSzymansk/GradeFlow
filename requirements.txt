@@ -2,3 +2,5 @@ SQLAlchemy
 Flask
 SQLite3
 Flask-SQLAlchemy
+flask-wtf
+email_validator

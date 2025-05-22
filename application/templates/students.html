@@ -1,8 +1,13 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}Lista uczniów{% endblock %}
+
+
+{% block content %}
+
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Lista uczniów</title>
     <style>
         body {
             font-family: Arial;
@@ -136,7 +141,7 @@
         <span class="close-btn" onclick="closeStudentAddForm()">&times;</span>
         <h2>Dodaj nowego ucznia</h2>
         <form id="student-add-form">
-            <div class="form-group">
+            <div class="form-group">Attendance
                 <label for="student-name">Imię:</label>
                 <input type="text" id="student-name" name="name" required>
             </div>
@@ -239,3 +244,5 @@
 
 </body>
 </html>
+
+{% endblock %}
