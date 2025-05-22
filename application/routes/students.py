@@ -7,7 +7,6 @@ from flask import render_template
 from application.services.student_service import *
 from application.services.class_service import *
 
-
 students_bp = Blueprint("students", __name__, url_prefix="/students")
 
 
@@ -58,7 +57,6 @@ def update_student():
             name=json['name'],
             surname=json['surname'],
             pesel=json['pesel'],
-            class_id=int(json['class_id'])
         )
         return update_student_in_db(db.session, json['id'], new_student)
     except Exception as e:

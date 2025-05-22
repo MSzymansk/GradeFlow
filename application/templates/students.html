@@ -131,7 +131,7 @@
         <select id="class-filter" onchange="filterByClass()">
             <option value="all">Wszystkie</option>
             {% for class in classes %}
-                <option value="{{ class.id }}">{{ class.name }}</option>
+            <option value="{{ class.id }}">{{ class.name }}</option>
             {% endfor %}
         </select>
     </div>
@@ -140,7 +140,6 @@
 <div class="buttons">
     <button onclick="openStudentAddForm()" style="margin-bottom: 20px;" class="open-form-button">Dodaj ucznia</button>
     <button onclick="openStudentDeleteForm()" style="margin-bottom: 20px;" class="open-form-button">Usun ucznia</button>
-    <button onclick="openStudentEditForm()" style="margin-bottom: 20px;" class="open-form-button">Edytuj ucznia</button>
 </div>
 <!--Formularz do wprowadzenia nowego ucznia-->
 <div id="student-add-modal" class="modal">
@@ -158,8 +157,7 @@
             </div>
             <div class="form-group">
                 <label for="student-pesel">PESEL:</label>
-                <input type="text" id="student-pesel" name="pesel" required pattern="[0-9]{11}"
-                       title="PESEL musi zawierać 11 cyfr">
+                <input type="text" id="student-pesel" name="pesel" required>
             </div>
             <div class="form-group">
                 <label for="class_id">ID klasy:</label>
@@ -180,8 +178,7 @@
         <form id="student-delete-form">
             <div class="form-group">
                 <label for="student-id">ID:</label>
-                <input type="text" id="student-id" name="id" required pattern="[0-9]+"
-                       title="ID może zawierać tylko cyfry">
+                <input type="text" id="student-id" name="id" required>
             </div>
             <div class="form-buttons">
                 <button type="button" class="cancel-btn" onclick="deleteStudentFromDb()">Usun</button>
@@ -189,63 +186,34 @@
         </form>
     </div>
 </div>
-<!--Formularz do edytowania ucznia-->
-<div id="student-edit-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeStudentEditForm()">&times;</span>
-        <h2>Edytuj ucznia o ID</h2>
-        <form id="student-edit-form">
-            <div class="form-group">
-                <label for="student-name">ID:</label>
-                <input type="text" id="student-edit-id" name="id" required pattern="[0-9]+"
-                       title="ID może zawierać tylko cyfry">
-            </div>
-            <div class="form-group">
-                <label for="student-name">Imię:</label>
-                <input type="text" id="student-edit-name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="student-surname">Nazwisko:</label>
-                <input type="text" id="student-edit-surname" name="surname" required>
-            </div>
-            <div class="form-group">
-                <label for="student-pesel">PESEL:</label>
-                <input type="text" id="student-edit-pesel" name="pesel" required pattern="[0-9]{11}"
-                       title="PESEL musi zawierać 11 cyfr">
-            </div>
-            <div class="form-group">
-                <label for="class_id">ID klasy:</label>
-                <input type="text" id="class_id-edit" name="class_id" required>
-            </div>
-            <div class="form-buttons">
-                <button type="submit" onclick="editStudentInDb()">Dodaj</button>
-                <button type="button" class="cancel-btn" onclick="closeStudentEditForm()">Anuluj</button>
-            </div>
-        </form>
-    </div>
-</div>
+<!--tabela z danymi-->
 <table>
     <thead>
     <tr>
+        <th></th>
         <th>ID</th>
         <th>Imię</th>
         <th>Nazwisko</th>
         <th>PESEL</th>
-        <th>ID klasy</th>
+        <th>Nazwa klasy</th>
     </tr>
     </thead>
     <tbody>
     {% for student in students %}
-    <tr data-class-id="{{ student.class_id }}">
+    <tr data-student-id="{{ student.id }}" data-class-id="{{ student.class_id }}">
+        <td>
+            <button onclick="enableEdit(this)">Edytuj</button>
+        </td>
         <td>{{ student.id }}</td>
         <td>{{ student.name }}</td>
         <td>{{ student.surname }}</td>
         <td>{{ student.pesel }}</td>
-        <td>{{ student.class_id }}</td>
+        <td>{{ student.class_name }}</td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
+
 <!--Odniesienie do pliku student_actions.js-->
 <script src="{{ url_for('static', filename='student_actions.js') }}"></script>
 
