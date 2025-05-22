@@ -109,3 +109,18 @@ function editStudentInDb() {
             console.error('Błąd przy edytowaniu ucznia:', error);
         });
 }
+
+function filterByClass() {
+    const selectedClassId = document.getElementById('class-filter').value;
+    console.log(selectedClassId)
+    const rows = document.querySelectorAll('tbody tr');
+
+    rows.forEach(row => {
+        const classId = row.getAttribute('data-class-id');
+        if (selectedClassId === 'all' || classId === selectedClassId) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}

@@ -122,8 +122,20 @@
         }
     </style>
 </head>
+<!--Tytuł i wybór klasy-->
 <body>
-<h1>Lista uczniów</h1>
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+    <h1 style="margin: 0;">Lista uczniów</h1>
+    <div>
+        <label for="class-filter"><strong>Klasa:</strong></label>
+        <select id="class-filter" onchange="filterByClass()">
+            <option value="all">Wszystkie</option>
+            {% for class in classes %}
+                <option value="{{ class.id }}">{{ class.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
 <!--Przycisk do odpalania fromularzy-->
 <div class="buttons">
     <button onclick="openStudentAddForm()" style="margin-bottom: 20px;" class="open-form-button">Dodaj ucznia</button>
@@ -224,7 +236,7 @@
     </thead>
     <tbody>
     {% for student in students %}
-    <tr>
+    <tr data-class-id="{{ student.class_id }}">
         <td>{{ student.id }}</td>
         <td>{{ student.name }}</td>
         <td>{{ student.surname }}</td>

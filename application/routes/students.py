@@ -1,13 +1,12 @@
 from flask import Blueprint, jsonify, request, redirect, url_for
-
 from application.database.models import Student
 from application.services import grades_service
 from application.services import student_service
-
 from application.extensions import db
 from flask import render_template
-
 from application.services.student_service import *
+from application.services.class_service import *
+
 
 students_bp = Blueprint("students", __name__, url_prefix="/students")
 
@@ -16,7 +15,8 @@ students_bp = Blueprint("students", __name__, url_prefix="/students")
 def get_all():
     session = db.session
     students = student_service.get_all_students(session)
-    return render_template("students.html", students=students)
+    classes = get_all_classes_from_db(session)
+    return render_template("students.html", students=students, classes=classes)
 
 
 @students_bp.route("/<int:id>/grades", methods=["GET"])
