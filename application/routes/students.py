@@ -6,11 +6,14 @@ from application.extensions import db
 from flask import render_template
 from application.services.student_service import *
 from application.services.class_service import *
+from application.routes.auth import login_required
+
 
 students_bp = Blueprint("students", __name__, url_prefix="/students")
 
 
 @students_bp.route("/", methods=["GET"])
+@login_required
 def get_all():
     session = db.session
     students = student_service.get_all_students(session)

@@ -1,9 +1,7 @@
-
 {% extends 'base.html'%}
 
 {% block content %}
 
-<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
@@ -43,6 +41,10 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+        }
+
+        .failure-row {
+            background-color: #f34242;
         }
 
         .open-form-button {
@@ -157,9 +159,8 @@
 <!-- Przycisk do otwierania formularzy -->
 <div class="buttons">
     <button onclick="openGradeAddForm()" class="open-form-button">Wystaw ocenę</button>
-    <button onclick="openGradeDeleteForm()" class="open-form-button">Usuń ocenę</button>
     <label>
-        <input type="checkbox" id="show-failure" onclick="toggleFailures()" />
+        <input type="checkbox" id="show-failure" onclick="toggleFailures()"/>
         Pokaż zagrożenia
     </label>
 </div>
@@ -199,48 +200,30 @@
     </div>
 </div>
 
-<!-- Modal do usuwania oceny -->
-<div id="grade-delete-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeGradeDeleteForm()">&times;</span>
-        <h2>Usuń ocenę</h2>
-        <form id="grade-delete-form" onsubmit="return deleteGradeFromDb()">
-            <div class="form-group">
-                <label for="grade-id">ID oceny:</label>
-                <input type="text" id="grade-id" name="id" required>
-            </div>
-            <div class="form-buttons">
-                <button type="submit" class="cancel-btn">Usuń</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 <!-- Tabela z ocenami -->
 <table>
     <thead>
     <tr>
         <th></th>
-        <th>ID oceny</th>
-        <th>Wartość</th>
-        <th>Typ</th>
         <th>Imię ucznia</th>
         <th>Nazwisko ucznia</th>
         <th>Nazwa klasy</th>
+        <th>Oceny</th>
+        <th>Średnia</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id="grades-tbody">
     {% for grade in grades %}
     <tr data-class-id="{{ grade.class_id }}">
         <td>
-            <button onclick="enableEdit(this)">Edytuj</button>
+            <button onclick="">Szczegóły</button>
         </td>
-        <td>{{ grade.id }}</td>
-        <td>{{ grade.value }}</td>
-        <td>{{ grade.type }}</td>
         <td>{{ grade.student_name }}</td>
         <td>{{ grade.student_surname }}</td>
         <td>{{ grade.class_name }}</td>
+        <td>{{ grade.grades_list | join(', ') }}</td>
+        <td>{{ grade.avg_grade}}</td>
     </tr>
     {% endfor %}
     </tbody>

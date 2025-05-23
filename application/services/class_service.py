@@ -1,9 +1,10 @@
 from application.database.models import _Class, Student
 from sqlalchemy import *
+from flask import session
 
 
-def get_all_classes_from_db(session):
-    classes = session.query(_Class).all()
+def get_all_classes_from_db(db_session):
+    classes = db_session.query(_Class).filter(_Class.teacher_id == session["teacher_id"]).all()
     return [
         {
             "id": _class.id,

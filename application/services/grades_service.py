@@ -1,9 +1,10 @@
 from application.database.models import Grade, Student, _Class
+from flask import session
 
 
-def get_class_grade(session, class_id):
+def get_class_grade(db_session, class_id):
     res = []
-    students = session.query(Student).filter(Student.class_id == class_id).all()
+    students = db_session.query(Student).filter(Student.class_id == class_id).all()
     for student in students:
         grades = Grade.query.filter_by(student_id=student.id).all()
         avg = round(sum(g.value for g in grades) / len(grades), 2) if grades else None
@@ -17,17 +18,28 @@ def get_class_grade(session, class_id):
     return res
 
 
-def get_all_grades_students_classes(session):
-    grades = session.query(Grade).join(Student).join(_Class).all()
-    print(grades)
-    return [{
-        "id": grade.id,
-        "value": grade.value,
-        "type": grade.type,
-        "student_name": grade.student.name,
-        "student_surname": grade.student.surname,
-        "class_name": grade.student._class.name,
-        "class_id" : grade.student._class.id
-    }
-        for grade in grades
-    ]
+def get_all_grades_students_classes(db_session):
+    grades = db_session.query(Grade).join(Student).join(_Class).filter(_Class.teacher_id == session["teacher_id"]).all()
+
+    students = {}
+
+    for grade in grades:
+        student = grade.student
+        student_id = student.id
+
+        if student_id not in students:
+            students[student_id] = {
+                "student_name": student.name,
+                "student_surname": student.surname,
+                "class_name": student._class.name,
+                "class_id": student._class.id,
+                "grades_list": [],
+            }
+
+        students[student_id]["grades_list"].append(grade.value)
+
+    for student_data in students.values():
+        grades_list = student_data["grades_list"]
+        student_data["avg_grade"] = sum(grades_list) / len(grades_list) if grades_list else 0
+
+    return list(students.values())

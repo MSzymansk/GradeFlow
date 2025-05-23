@@ -3,6 +3,8 @@ from application.extensions import db
 from flask import render_template
 from application.services.class_service import *
 from application.services.grades_service import *
+from application.routes.auth import login_required
+
 
 
 
@@ -10,6 +12,7 @@ grades_bp = Blueprint("grades", __name__, url_prefix="/grades")
 
 
 @grades_bp.route("/", methods=["GET"])
+@login_required
 def get_all():
     session = db.session
     classes = get_all_classes_from_db(session)
