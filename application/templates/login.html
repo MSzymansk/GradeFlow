@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Logowanie</title>
+</head>
+<body>
+<h2>Logowanie nauczyciela</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <p>
+        {{ form.email.label }}<br>
+        {{ form.email(size=32) }}<br>
+        {% for error in form.email.errors %}
+            <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(size=32) }}<br>
+        {% for error in form.password.errors %}
+            <span style="color:red;">{{ error }}</span>
+        {% endfor %}
+    </p>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flash-messages" style="list-style-type: none; padding: 0;">
+                {% for message in messages %}
+                    <li style="color: red;">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <p>{{ form.submit() }}</p>
+</form>
+</body>
+</html>

@@ -13,6 +13,7 @@ students_bp = Blueprint("students", __name__, url_prefix="/students")
 
 
 @students_bp.route("/", methods=["GET"])
+@login_required
 def get_all():
     session = db.session
     students = student_service.get_all_students(session)
@@ -20,6 +21,7 @@ def get_all():
 
 
 @students_bp.route("/<int:id>/grades", methods=["GET"])
+@login_required
 def get_class_grades(id):
     session = db.session
     class_grades = grades_service.get_class_grade(session, id)

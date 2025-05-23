@@ -1,10 +1,15 @@
-from application.database.models import Student, Grade
-from flask import jsonify
+from sqlalchemy.orm import selectinload
+
+from application.database.models import Student, Grade, _Class
+from flask import jsonify, session
 from sqlalchemy import *
 
 
-def get_all_students(session):
-    students = session.query(Student).all()
+def get_all_students(db_session):
+    students = db_session.query(Student)\
+        .join(Student._class)\
+        .options(selectinload(Student._class).selectinload(_Class.teacher))\
+        .filter(_Class.teacher_id == session["teacher_id"]).all()
     return [
         {
             "id": student.id,
