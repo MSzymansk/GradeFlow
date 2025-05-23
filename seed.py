@@ -1,4 +1,3 @@
-# application/seed.py
 from datetime import date, timedelta
 import random
 from werkzeug.security import generate_password_hash
@@ -10,9 +9,9 @@ def seed_data():
         return
 
 
-    teacher1 = Teacher(pesel=22222222222, name="Jan", surname="Nowak",email="jan@n.pl",password=generate_password_hash("jan"))
-    teacher2 = Teacher(pesel=22222222222, name="Jan", surname="Waclaw",email="jan@w",password=generate_password_hash("jan"))
-    teacher3 = Teacher(pesel=33333333333, name="Maria", surname="Wiśniewska",email="maria@w.pl",password=generate_password_hash("maria"))
+    teacher1 = Teacher(pesel=22222222222, name="Jan", surname="Nowak",email="jan@n.pl",password_hash=generate_password_hash("jan"))
+    teacher2 = Teacher(pesel=22222222222, name="Jan", surname="Waclaw",email="jan@w",password_hash=generate_password_hash("jan"))
+    teacher3 = Teacher(pesel=33333333333, name="Maria", surname="Wiśniewska",email="maria@w.pl",password_hash=generate_password_hash("maria"))
     db.session.add_all([teacher1, teacher2, teacher3])
     db.session.flush()
 

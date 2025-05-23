@@ -1,18 +1,18 @@
 API_URI = "/students/"
 
-function openGradeAddForm() {
-    document.getElementById("grade-add-modal").style.display = "block";
+function openStudentAddForm() {
+    document.getElementById("student-add-modal").style.display = "block";
 }
 
-function closeGradeAddForm() {
-    document.getElementById("grade-add-modal").style.display = "none";
+function closeStudentAddForm() {
+    document.getElementById("student-add-modal").style.display = "none";
 }
 
-function openGradeDeleteForm() {
+function openStudentDeleteForm() {
     document.getElementById("student-delete-modal").style.display = "block";
 }
 
-function closeGradeDeleteForm() {
+function closeStudentDeleteForm() {
     document.getElementById("student-delete-modal").style.display = "none";
 }
 
