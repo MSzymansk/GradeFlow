@@ -1,22 +1,18 @@
-from sqlalchemy.orm import selectinload
-
 from application.database.models import Student, Grade, _Class
-from flask import jsonify, session
+from flask import jsonify
 from sqlalchemy import *
 
 
-def get_all_students(db_session):
-    students = db_session.query(Student)\
-        .join(Student._class)\
-        .options(selectinload(Student._class).selectinload(_Class.teacher))\
-        .filter(_Class.teacher_id == session["teacher_id"]).all()
+def get_all_students(session):
+    students = session.query(Student).join(_Class).all()
     return [
         {
             "id": student.id,
             "pesel": student.pesel,
             "name": student.name,
             "surname": student.surname,
-            "class_id": student.class_id
+            "class_id": student.class_id,
+            "class_name": student._class.name
         }
         for student in students
     ]
@@ -50,7 +46,7 @@ def get_student(session, student_id: int):
         "pesel": student.pesel,
         "name": student.name,
         "surname": student.surname,
-        "class_id": student.class_id,
+        "class_id": student.class_id
     }
     return jsonify(student_data), 200
 
@@ -84,7 +80,6 @@ def update_student_in_db(session, student_id: int, new_student: Student):
         pesel=new_student.pesel,
         name=new_student.name,
         surname=new_student.surname,
-        class_id=new_student.class_id
     )
     session.execute(stmt)
     session.commit()

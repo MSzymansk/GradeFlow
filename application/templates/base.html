@@ -10,7 +10,7 @@
 <nav style="background-color: #eee; padding: 10px;">
     <a href="{{ url_for('dashboard.dashboard') }}"  >🏠 Strona główna</a> |
     <a href="{{ url_for('students.get_all') }}">📚 Uczniowie</a> |
-    <a href="tutaj_trzeba_dodac_grades">Grades</a> |
+    <a href="{{ url_for('grades.get_all') }}">Grades</a> |
     <a href="{{ url_for('auth.logout') }}">🚪 Wyloguj</a>
 </nav>
 

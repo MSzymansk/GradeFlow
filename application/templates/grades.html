@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Lista uczniów</title>
+    <title>Lista ocen</title>
     <style>
         body {
             font-family: Arial;
@@ -24,10 +25,12 @@
             background-color: #f2f2f2;
         }
 
-        /*Przycisk "dodaj ucznia"*/
         .buttons {
             margin-top: 20px;
+            margin-bottom: 20px;
             text-align: left;
+            display: flex;
+            align-items: center;
         }
 
         .buttons button {
@@ -43,6 +46,16 @@
             color: black;
         }
 
+        .buttons label {
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .buttons input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -54,7 +67,6 @@
             background-color: rgba(0, 0, 0, 0.5);
         }
 
-        /*Formularz do ddoania ucznia*/
         .modal-content {
             background-color: white;
             margin: 10% auto;
@@ -90,7 +102,7 @@
             font-weight: bold;
         }
 
-        input[type="text"] {
+        input[type="text"], select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
@@ -122,10 +134,11 @@
         }
     </style>
 </head>
-<!--Tytuł i wybór klasy-->
 <body>
+
+<!-- Nagłówek i filtr klasy -->
 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-    <h1 style="margin: 0;">Lista uczniów</h1>
+    <h1 style="margin: 0;">Lista ocen</h1>
     <div>
         <label for="class-filter"><strong>Klasa:</strong></label>
         <select id="class-filter" onchange="filterByClass()">
@@ -136,86 +149,99 @@
         </select>
     </div>
 </div>
-<!--Przycisk do odpalania fromularzy-->
+
+<!-- Przycisk do otwierania formularzy -->
 <div class="buttons">
-    <button onclick="openStudentAddForm()" style="margin-bottom: 20px;" class="open-form-button">Dodaj ucznia</button>
-    <button onclick="openStudentDeleteForm()" style="margin-bottom: 20px;" class="open-form-button">Usun ucznia</button>
+    <button onclick="openGradeAddForm()" class="open-form-button">Wystaw ocenę</button>
+    <button onclick="openGradeDeleteForm()" class="open-form-button">Usuń ocenę</button>
+    <label>
+        <input type="checkbox" id="show-failure" onclick="toggleFailures()" />
+        Pokaż zagrożenia
+    </label>
 </div>
-<!--Formularz do wprowadzenia nowego ucznia-->
-<div id="student-add-modal" class="modal">
+
+<!-- Modal do dodawania oceny -->
+<div id="grade-add-modal" class="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeStudentAddForm()">&times;</span>
-        <h2>Dodaj nowego ucznia</h2>
-        <form id="student-add-form">
+        <span class="close-btn" onclick="closeGradeAddForm()">&times;</span>
+        <h2>Dodaj ocenę</h2>
+        <form id="grade-add-form" onsubmit="return addGradeToDb()">
             <div class="form-group">
-                <label for="student-name">Imię:</label>
+                <label for="student-name">Imię ucznia:</label>
                 <input type="text" id="student-name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="student-surname">Nazwisko:</label>
+                <label for="student-surname">Nazwisko ucznia:</label>
                 <input type="text" id="student-surname" name="surname" required>
             </div>
             <div class="form-group">
-                <label for="student-pesel">PESEL:</label>
-                <input type="text" id="student-pesel" name="pesel" required>
+                <label for="grade-value">Wartość oceny:</label>
+                <input type="text" id="grade-value" name="value" required>
             </div>
             <div class="form-group">
-                <label for="class_id">ID klasy:</label>
-                <input type="text" id="class_id" name="class_id" required>
+                <label for="grade-type">Typ oceny:</label>
+                <select id="grade-type" name="type" required>
+                    <option value="" disabled selected>Wybierz typ oceny</option>
+                    <option value="Sprawdzian">Sprawdzian</option>
+                    <option value="Kartkówka">Kartkówka</option>
+                    <option value="Odpowiedź ustna">Odpowiedź ustna</option>
+                </select>
             </div>
             <div class="form-buttons">
-                <button type="submit" onclick="addStudentToDb()">Dodaj</button>
-                <button type="button" class="cancel-btn" onclick="closeStudentAddForm()">Anuluj</button>
+                <button type="submit">Dodaj</button>
+                <button type="button" class="cancel-btn" onclick="closeGradeAddForm()">Anuluj</button>
             </div>
         </form>
     </div>
 </div>
-<!--Fromularz do usuniecia ucznia-->
-<div id="student-delete-modal" class="modal">
+
+<!-- Modal do usuwania oceny -->
+<div id="grade-delete-modal" class="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeStudentDeleteForm()">&times;</span>
-        <h2>Usun ucznia</h2>
-        <form id="student-delete-form">
+        <span class="close-btn" onclick="closeGradeDeleteForm()">&times;</span>
+        <h2>Usuń ocenę</h2>
+        <form id="grade-delete-form" onsubmit="return deleteGradeFromDb()">
             <div class="form-group">
-                <label for="student-id">ID:</label>
-                <input type="text" id="student-id" name="id" required>
+                <label for="grade-id">ID oceny:</label>
+                <input type="text" id="grade-id" name="id" required>
             </div>
             <div class="form-buttons">
-                <button type="button" class="cancel-btn" onclick="deleteStudentFromDb()">Usun</button>
+                <button type="submit" class="cancel-btn">Usuń</button>
             </div>
         </form>
     </div>
 </div>
-<!--tabela z danymi-->
+
+<!-- Tabela z ocenami -->
 <table>
     <thead>
     <tr>
         <th></th>
-        <th>ID</th>
-        <th>Imię</th>
-        <th>Nazwisko</th>
-        <th>PESEL</th>
+        <th>ID oceny</th>
+        <th>Wartość</th>
+        <th>Typ</th>
+        <th>Imię ucznia</th>
+        <th>Nazwisko ucznia</th>
         <th>Nazwa klasy</th>
     </tr>
     </thead>
     <tbody>
-    {% for student in students %}
-    <tr data-student-id="{{ student.id }}" data-class-id="{{ student.class_id }}">
+    {% for grade in grades %}
+    <tr data-class-id="{{ grade.class_id }}">
         <td>
             <button onclick="enableEdit(this)">Edytuj</button>
         </td>
-        <td>{{ student.id }}</td>
-        <td>{{ student.name }}</td>
-        <td>{{ student.surname }}</td>
-        <td>{{ student.pesel }}</td>
-        <td>{{ student.class_name }}</td>
+        <td>{{ grade.id }}</td>
+        <td>{{ grade.value }}</td>
+        <td>{{ grade.type }}</td>
+        <td>{{ grade.student_name }}</td>
+        <td>{{ grade.student_surname }}</td>
+        <td>{{ grade.class_name }}</td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
-
-<!--Odniesienie do pliku student_actions.js-->
-<script src="{{ url_for('static', filename='student_actions.js') }}"></script>
+<script src="{{ url_for('static', filename='grade_actions.js') }}"></script>
 
 </body>
 </html>
