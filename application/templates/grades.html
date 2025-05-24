@@ -217,7 +217,9 @@
     {% for grade in grades %}
     <tr data-class-id="{{ grade.class_id }}">
         <td>
-            <button onclick="">Szczegóły</button>
+            <a href="{{ url_for('grades.get_grades_details', id=grade.student_id) }}">
+                <button type="button">Szczegóły</button>
+            </a>
         </td>
         <td>{{ grade.student_name }}</td>
         <td>{{ grade.student_surname }}</td>
