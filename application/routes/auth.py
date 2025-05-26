@@ -27,7 +27,7 @@ def login_required(f):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        teacher = Teacher.query.filter_by(email=form.email.data).first()
+        teacher = Teacher.query.filter(Teacher.email == form.email.data).first()
         if teacher and check_password_hash(teacher.password_hash, form.password.data):
             session['teacher_id'] = teacher.id
             flash('Zalogowano pomyślnie')
