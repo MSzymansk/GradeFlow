@@ -158,7 +158,6 @@
 
 <!-- Przycisk do otwierania formularzy -->
 <div class="buttons">
-    <button onclick="openGradeAddForm()" class="open-form-button">Wystaw ocenę</button>
     <label>
         <input type="checkbox" id="show-failure" onclick="toggleFailures()"/>
         Pokaż zagrożenia
@@ -170,15 +169,7 @@
     <div class="modal-content">
         <span class="close-btn" onclick="closeGradeAddForm()">&times;</span>
         <h2>Dodaj ocenę</h2>
-        <form id="grade-add-form" onsubmit="return addGradeToDb()">
-            <div class="form-group">
-                <label for="student-name">Imię ucznia:</label>
-                <input type="text" id="student-name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="student-surname">Nazwisko ucznia:</label>
-                <input type="text" id="student-surname" name="surname" required>
-            </div>
+        <form id="grade-add-form">
             <div class="form-group">
                 <label for="grade-value">Wartość oceny:</label>
                 <input type="text" id="grade-value" name="value" required>
@@ -192,8 +183,9 @@
                     <option value="Odpowiedź ustna">Odpowiedź ustna</option>
                 </select>
             </div>
+            <input type="hidden" id="hidden-student-id" name="student_id">
             <div class="form-buttons">
-                <button type="submit">Dodaj</button>
+                <button type="submit" onclick="addGradeToDb()">Dodaj</button>
                 <button type="button" class="cancel-btn" onclick="closeGradeAddForm()">Anuluj</button>
             </div>
         </form>
@@ -205,6 +197,7 @@
 <table>
     <thead>
     <tr>
+        <th>Wystaw ocenę</th>
         <th></th>
         <th>Imię ucznia</th>
         <th>Nazwisko ucznia</th>
@@ -215,7 +208,10 @@
     </thead>
     <tbody id="grades-tbody">
     {% for grade in grades %}
-    <tr data-class-id="{{ grade.class_id }}">
+    <tr data-class-id="{{grade.class_id}}" data-student-id="{{grade.student_id}}">
+        <td>
+            <button type="button" onclick="openGradeAddForm(this)">Dodaj</button>
+        </td>
         <td>
             <a href="{{ url_for('grades.get_grades_details', id=grade.student_id) }}">
                 <button type="button">Szczegóły</button>

@@ -45,3 +45,17 @@ def delete_grade():
         return delete_grade_from_db(db.session, json["id"])
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+@grades_bp.route('/add', methods=['POST'])
+def add_grade():
+    json = request.get_json()
+    try:
+        new_grade = Grade(
+            value=json["value"],
+            type=json["type"],
+            student_id=json["student_id"]
+        )
+        return add_grade_to_db(db.session, new_grade)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400

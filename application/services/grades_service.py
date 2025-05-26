@@ -83,3 +83,16 @@ def delete_grade_from_db(db_session, id):
     db_session.execute(stmt)
     db_session.commit()
     return jsonify({"message": f"Grade with ID {id} delated"}), 200
+
+def add_grade_to_db(db_session, new_grade):
+    stmt = insert(Grade).values(
+        value=new_grade.value,
+        type=new_grade.type,
+        student_id=new_grade.student_id,
+        teacher_id = session["teacher_id"]
+    ).returning(Grade.id)
+
+    result = db_session.execute(stmt)
+    new_id = result.scalar_one()
+    db_session.commit()
+    return jsonify({"message": "Grade added successfully", "grade_id": new_id}), 201

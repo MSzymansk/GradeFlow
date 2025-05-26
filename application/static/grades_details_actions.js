@@ -33,7 +33,7 @@ function editGradeInDb(row, button) {
     const value = cells[4].querySelector('input').value;
 
     const validValues = [1, 2, 3, 4, 5, 6]
-    if (!validValues.includes(value)) {
+    if (!validValues.includes(parseInt(value))) {
         alert("Wartość oceny jest niepoprawna")
         return
     }
