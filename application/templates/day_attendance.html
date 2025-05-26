@@ -26,21 +26,19 @@
                 background-color: #f2f2f2;
             }
 
-        .buttons {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            text-align: left;
-            display: flex;
-            align-items: center;
-        }
+            /*Przycisk "dodaj ucznia"*/
+            .buttons {
+                margin-top: 20px;
+                text-align: left;
+            }
 
-        .buttons button{
-            margin-left: 10px;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+            .buttons button {
+                margin-left: 10px;
+                padding: 8px 15px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
 
             .open-form-button {
                 background: #cccccc;
@@ -126,47 +124,47 @@
             }
         </style>
     </head>
-    <div style="align-items: center;display: flex;justify-content: space-between; padding: 10px;background: #cccccc;border-style: solid;border-radius: 8px;border-width: 4px;margin: 50px;">
+    <body data-date={{ attendance.data }}>
+    <div style="align-items: center;display: flex;justify-content: space-between; padding: 10px;">
         <h1>
-            Przeprowadzone Lekcje
+            Lakcja klasy: {{ attendance.class }}
         </h1>
         <div>
-            <label>Klasa:</label>
-
+            <h2>Data: {{ attendance.data }}</h2>
         </div>
 
     </div>
-    <div class="buttons">
-        <a>
-            <button class="open-form-button">
-                Nowa lekcja
-            </button>
-        </a>
+    <div style="margin: 20px;">
+        <a href="{{ url_for('attendance.get_lessons_list') }}">⟵ Powrót do listy uczniów</a>
     </div>
     <table>
         <thead>
         <tr>
-            <th>Data</th>
-            <th>Klasa</th>
-            <th>Akcja</th>
+            <th>id</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Status Obecnosc</th>
+            <th>edycja Statusu
+            </th>
         </tr>
         </thead>
         <tbody>
-        {% for lesson in lessons %}
+        {% for student in attendance.students %}
             <tr>
-                <td>{{ lesson.data }}</td>
-                <td>{{ lesson.klasa }}</td>
+                <td>{{ student.attendance_id }}</td>
+                <td>{{ student.studentName }}</td>
+                <td>{{ student.studentSurname }}</td>
+                <td>{{ student.status }}</td>
                 <td>
-                    <a href="{{ url_for('attendance.szczegoly_lesson', data=lesson.data, klasa=lesson.klasa) }}">
-                        <button type="button">Szczegóły</button>
-                    </a>
+                    <button onclick="enableEditAttendance(this)">Edytuj</button>
                 </td>
             </tr>
         {% endfor %}
+
         </tbody>
     </table>
 
-
+    <script src="{{ url_for('static', filename='day_attendance_actions.js') }}"></script>
     </body>
     </html>
 

@@ -1,5 +1,7 @@
 from collections import defaultdict
-from flask import session
+from flask import session, jsonify
+from sqlalchemy.orm.sync import update
+
 from application.database.models import Attendance, _Class, student, Student, teacher
 from sqlalchemy.orm import selectinload
 
@@ -88,3 +90,37 @@ def get_lessons_list(db_session):
 
     return result
 
+from flask import session
+
+def get_class_attendance_list(db_session, data, _class_select):
+    attendance_list = db_session.query(Attendance)\
+        .join(_Class)\
+        .filter(Attendance.date == data)\
+        .filter(_Class.name == _class_select)\
+        .filter(_Class.teacher_id == session["teacher_id"])\
+        .all()
+
+    return {
+        "data": data,
+        "class": _class_select,
+        "students": [
+            {
+                "attendance_id":attendance.id,
+                "studentId": attendance.student.id,
+                "studentName": attendance.student.name,
+                "studentSurname" : attendance.student.surname,
+                "status": attendance.status
+            }
+            for attendance in attendance_list
+        ]
+    }
+
+
+def upgrade_attendance_in_db(db_session, attendance_id, status):
+    attendance = db_session.query(Attendance) \
+        .filter(Attendance.id == attendance_id).first()
+    if not attendance:
+        return jsonify({'error': "attendance not found"}), 404
+    attendance.status = status
+    db_session.commit()
+    return jsonify({'message': "attendance updated"}), 200
