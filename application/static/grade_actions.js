@@ -23,6 +23,11 @@ function addGradeToDb() {
         return
     }
 
+    if (!type){
+        alert("Wybierz typ oceny")
+        return
+    }
+
     fetch(API_URI + 'add', {
         method: 'POST',
         headers: {

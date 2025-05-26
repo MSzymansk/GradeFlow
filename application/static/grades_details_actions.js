@@ -11,7 +11,7 @@ function enableEditGrade(button) {
         'Odpowiedź ustna'
     ];
 
-    let selectHtml = '<select>';
+    let selectHtml = '<select required>';
     selectOptions.forEach(option => {
         const selected = option === typeValue ? 'selected' : '';
         selectHtml += `<option value="${option}" ${selected}>${option}</option>`;
@@ -64,7 +64,6 @@ function deleteGradeFromDb(button) {
     const row = button.closest('tr');
     const cell = row.querySelectorAll('td');
     const id = cell[2].innerText
-    console.log(id)
 
     fetch(API_URI + 'delete', {
         method: "POST",

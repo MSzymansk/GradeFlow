@@ -16,7 +16,7 @@ def seed_data():
     db.session.flush()
 
     class1 = _Class(name="1A", year=date(2023, 9, 1), teacher=teacher1)
-    class2 = _Class(name="2B", year=date(2023, 9, 1), teacher=teacher2)
+    class2 = _Class(name="2B", year=date(2023, 9, 1), teacher=teacher1)
     class3 = _Class(name="3C", year=date(2023, 9, 1), teacher=teacher3)
     db.session.add_all([class1, class2, class3])
     db.session.flush()

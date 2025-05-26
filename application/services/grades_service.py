@@ -3,7 +3,7 @@ from flask import session, jsonify
 from sqlalchemy import *
 
 
-def get_class_grade(db_session, class_id):
+def get_class_grade(db_session, class_id: int):
     res = []
     students = db_session.query(Student).filter(Student.class_id == class_id).all()
     for student in students:
@@ -47,7 +47,7 @@ def get_all_grades_students_classes(db_session):
     return list(students.values())
 
 
-def get_students_grades(db_session, id):
+def get_students_grades(db_session, id: int):
     student_grades = db_session.query(Grade).join(Student).filter(Student.id == id).all()
 
     result = []
@@ -62,7 +62,7 @@ def get_students_grades(db_session, id):
     return result
 
 
-def update_grade_in_db(db_session, new_grade):
+def update_grade_in_db(db_session, new_grade: Grade):
     grade = db_session.query(Grade).filter(Grade.id == new_grade.id).first()
     if not grade:
         return jsonify({"error": "Grade not found"}), 404
@@ -75,7 +75,7 @@ def update_grade_in_db(db_session, new_grade):
     return jsonify({"message": f"Grade with ID {new_grade.id} updated"}), 200
 
 
-def delete_grade_from_db(db_session, id):
+def delete_grade_from_db(db_session, id: int):
     grade = db_session.query(Grade).filter(Grade.id == id).first()
     if not grade:
         return jsonify({"error": "Grade not found"}), 404
@@ -84,12 +84,13 @@ def delete_grade_from_db(db_session, id):
     db_session.commit()
     return jsonify({"message": f"Grade with ID {id} delated"}), 200
 
-def add_grade_to_db(db_session, new_grade):
+
+def add_grade_to_db(db_session, new_grade: Grade):
     stmt = insert(Grade).values(
         value=new_grade.value,
         type=new_grade.type,
         student_id=new_grade.student_id,
-        teacher_id = session["teacher_id"]
+        teacher_id=session["teacher_id"]
     ).returning(Grade.id)
 
     result = db_session.execute(stmt)

@@ -1,3 +1,5 @@
+import flask
+
 from application.database.models import Student, Grade, _Class
 from flask import jsonify, session
 from sqlalchemy import *

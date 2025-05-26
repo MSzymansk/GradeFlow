@@ -6,6 +6,7 @@ function openStudentAddForm() {
 
 function closeStudentAddForm() {
     document.getElementById("student-add-modal").style.display = "none";
+    document.getElementById("student-add-form").reset();
 }
 
 function openStudentDeleteForm() {
@@ -14,6 +15,7 @@ function openStudentDeleteForm() {
 
 function closeStudentDeleteForm() {
     document.getElementById("student-delete-modal").style.display = "none";
+    document.getElementById("student-delete-form").reset();
 }
 
 function validateNameOrSurname(value) {
@@ -31,12 +33,11 @@ function validateClassId(value) {
     return classIdRegex.test(value);
 }
 
-
 function addStudentToDb() {
     const name = document.getElementById("student-name").value;
     const surname = document.getElementById("student-surname").value;
     const pesel = document.getElementById("student-pesel").value;
-    const classId = document.getElementById("class_id").value;
+    const classId = document.getElementById("class-id").value;
 
     if (!validateNameOrSurname(name)) {
         alert("Imię może zawierać tylko litery.");
@@ -50,8 +51,8 @@ function addStudentToDb() {
         alert("PESEL musi zawierać dokładnie 11 cyfr.");
         return;
     }
-    if (!validateClassId(classId)) {
-        alert("ID klasy musi zawierać tylko cyfry.");
+    if (!classId){
+        alert("Klasa nie może być pusta");
         return;
     }
 
