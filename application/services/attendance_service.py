@@ -1,6 +1,6 @@
 from collections import defaultdict
 from flask import session, jsonify
-from sqlalchemy.orm.sync import update
+
 
 from application.database.models import Attendance, _Class, student, Student, teacher
 from sqlalchemy.orm import selectinload
@@ -80,15 +80,19 @@ def get_lessons_list(db_session):
     result_set = set()
 
     for lesson in lessons:
-        result_set.add((lesson.date.isoformat(), lesson._class.name))
-
+        result_set.add((
+            lesson.date.isoformat(),
+            lesson.time.strftime("%H:%M"),
+            lesson._class.name
+        ))
 
     result = [
-        {"data": date, "klasa": class_name}
-        for (date, class_name) in sorted(result_set)
+        {"data": date, "godzina": time, "klasa": class_name}
+        for (date, time, class_name) in sorted(result_set)
     ]
 
     return result
+
 
 from flask import session
 
@@ -99,9 +103,10 @@ def get_class_attendance_list(db_session, data, _class_select):
         .filter(_Class.name == _class_select)\
         .filter(_Class.teacher_id == session["teacher_id"])\
         .all()
-
+    time = attendance_list[0].time.strftime("%H:%M") if attendance_list else None
     return {
         "data": data,
+        "godzina": time,
         "class": _class_select,
         "students": [
             {

@@ -8,6 +8,8 @@ class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status = db.Column(db.String(30), nullable=False)
     date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
+
 
     class_id = db.Column(db.Integer, db.ForeignKey("Class.id"))
     _class = db.relationship("_Class", uselist=False, back_populates="attendances")

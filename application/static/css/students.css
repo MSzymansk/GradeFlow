@@ -121,3 +121,28 @@ input[type="text"], select {
     border-radius: 4px;
     box-sizing: border-box;
 }
+
+.form-group {
+  margin: 1em 0;
+  font-family: Arial, sans-serif;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input[type="date"] {
+  padding: 0.5em;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.form-group input[type="time"] {
+  padding: 0.5em;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

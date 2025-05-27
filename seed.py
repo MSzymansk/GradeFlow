@@ -1,11 +1,11 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, time, datetime
 import random
 from werkzeug.security import generate_password_hash
 from application.extensions import db
 from application.database.models import Teacher, _Class, Student, Grade, Attendance
 
 def seed_data():
-    if Teacher.query.first():  # sprawdzamy czy dane już istnieją
+    if Teacher.query.first():
         return
 
 
@@ -49,9 +49,12 @@ def seed_data():
             db.session.add(grade)
 
         for i in range(2):
+
+
             attendance = Attendance(
                 status=random.choice(["obecny", "nieobecny", "spóźniony"]),
                 date=date.today() - timedelta(days=i),
+                time=datetime.now().time(),
                 _class=student._class,
                 student=student
             )

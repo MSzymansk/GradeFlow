@@ -75,7 +75,7 @@ function filterByClass() {
 
     rows.forEach(row => {
         const classId = row.getAttribute('data-class-id');
-        if (selectedClassId === 'all' || classId === selectedClassId) {
+        if (classId === selectedClassId) {
             row.style.display = '';
         } else {
             row.style.display = 'none';

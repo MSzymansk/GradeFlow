@@ -1,26 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div>
-    <h1>Lista obecności</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/students.css') }}">
+    </head>
+    <body>
     <div>
-        <h2>
-            Data:
-        </h2>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <h1 style="margin: 0;">Lista Obecnosci</h1>
+        </div>
     </div>
-</div>
-<div>
-    <table>
-        <tr>
-            t
-        </tr>
-    </table>
-</div>
-
-
-</body>
-</html>
+    <div style="display: flex; align-items: center;">
+        <div class="form-group">
+            <label for="date"><strong>Wybierz datę:</strong></label>
+            <input type="date" id="date" name="date" value={{ current_date }}>
+        </div>
+        <div style="margin-left: 20px" class="form-group" >
+            <label for="time"><strong>Godzina:</strong></label>
+            <input type="time" id="time" name="time" value="08:00">
+        </div>
+        <div style="margin-left: 20px">
+            <label for="class-filter"><strong>Klasa:</strong></label>
+            <select id="class-filter" onchange="filterByClass()">
+                <option value="brak">wybierz</option>
+                {% for class in classes %}
+                    <option value="{{ class.id }}">{{ class.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>id ucznia</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>obecny</th>
+                <th>nieobecny</th>
+                <th>spozniony</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for student in class_students %}
+                <tr data-student-id="{{ student.id }}" data-name="{{ student.name }}"
+                    data-surname="{{ student.surname }}" data-class-id="{{ student.class_id }}">
+                    <td>{{ student.id }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.surname }}</td>
+                    <td><input type="radio" name="status_{{ student.id }}" value="obecny"></td>
+                    <td><input type="radio" name="status_{{ student.id }}" value="nieobecny"></td>
+                    <td><input type="radio" name="status_{{ student.id }}" value="spóźniony"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="buttons" style="padding-top: 20px">
+            <a>
+                <button class="open-form-button" onclick="submitAttendance()">zapisz</button>
+            </a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='day_attendance_list_actions.js') }}"></script>
+    </body>
+    </html>
+{% endblock %}
