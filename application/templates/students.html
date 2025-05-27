@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista uczniów</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/students.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <!--Tytuł i wybór klasy-->
 <body>
@@ -53,7 +53,7 @@
                 </select>
             </div>
             <div class="form-buttons">
-                <button type="button" onclick="addStudentToDb()">Dodaj</button>
+                <button type="submit" onclick="addStudentToDb()">Dodaj</button>
                 <button type="button" class="cancel-btn" onclick="closeStudentAddForm()">Anuluj</button>
             </div>
         </form>
