@@ -6,14 +6,15 @@ from sqlalchemy import *
 
 
 def get_all_students(db_session):
-    students = db_session.query(Student).join(_Class)\
-    .filter(_Class.teacher_id == session['teacher_id']).all()
+    students = db_session.query(Student).join(_Class) \
+        .filter(_Class.teacher_id == session['teacher_id']).all()
 
     results = []
 
     for student in students:
-        avg = db_session.query(func.avg(Grade.value)).filter(Grade.student_id==student.id).scalar() or 1.0
-        absence = db_session.query(func.count(Attendance.id)).filter(Attendance.student_id==student.id, Attendance.status == "nieobecny").scalar()
+        avg = db_session.query(func.avg(Grade.value)).filter(Grade.student_id == student.id).scalar() or 1.0
+        absence = db_session.query(func.count(Attendance.id)).filter(Attendance.student_id == student.id,
+                                                                     Attendance.status == "nieobecny").scalar()
 
         results.append({
             "id": student.id,
@@ -27,6 +28,7 @@ def get_all_students(db_session):
         })
 
     return results
+
 
 def get_all_students_class(db_session, class_id: int):
     students = db_session.query(Student).filter(Student.class_id == class_id).all()
@@ -62,6 +64,9 @@ def get_student(db_session, student_id: int):
 
 
 def add_student_to_db(db_session, new_student: Student):
+    existing_student = db_session.query(Student).filter_by(pesel=new_student.pesel).first()
+    if existing_student:
+        return jsonify({"error": "Uczeń z takim PESEL już istnieje"}), 400
     stmt = insert(Student).values(pesel=new_student.pesel, name=new_student.name, surname=new_student.surname,
                                   class_id=new_student.class_id).returning(Student.id)
     result = db_session.execute(stmt)
@@ -82,6 +87,10 @@ def delete_student_from_db(db_session, student_id: int):
 
 
 def update_student_in_db(db_session, student_id: int, new_student: Student):
+    existing_student = db_session.query(Student).filter_by(pesel=new_student.pesel).first()
+    if existing_student:
+        return jsonify({"error": "Uczeń z takim PESEL już istnieje"}), 400
+
     student = db_session.query(Student).filter(Student.id == student_id).first()
     if not student:
         return jsonify({"error": "Student not found"}), 404
