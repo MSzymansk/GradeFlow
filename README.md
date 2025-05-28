@@ -1,8 +1,9 @@
+# Michał Szymański & Julian Pulawski c31
+
 # GradeFlow
+# Projekt 4: Dziennik Nauczyciela
 
-# 📝 Projekt 4: Dziennik Nauczyciela
-
-## 🎯 Wymagania projektowe
+## Wymagania projektowe
 
 - ✅ Dodanie/usuwanie/edycja ucznia z imieniem, nazwiskiem i PESELEM  
 - ✅ Sprawdzanie listy obecności (obecny, nieobecny, usprawiedliwiony, spóźniony)  
@@ -13,32 +14,32 @@
 - ✅ Metoda obliczająca średnią ucznia  
 - ✅ Metoda sprawdzająca status ucznia (zagrożony / niezagrożony)  
 - ✅ Generowanie raportów z ocen i obecności (XLSX)  
-- ✅ Generowanie statystyk i wykresów (min. 3 wykresy)  
-- ✅ Przykładowy dziennik (10 uczniów z ocenami i obecnościami)  
-- ✅ Obsługa wyjątków (minimum 10)  
+- ✅ Generowanie statystyk i wykresów 
+- ✅ Przykładowy dziennik 
+- ✅ Obsługa wyjątków  
 - ✅ Prosty interfejs użytkownika  
 
 ---
 
-## 🚀 Rozszerzenia projektu
+## Rozszerzenia projektu
 
 Aby zwiększyć funkcjonalność projektu i uczynić go bardziej nowoczesnym, projekt zostanie rozbudowany o:
 
-### 🌐 Webowy interfejs (Flask)
+### Webowy interfejs (Flask)
 - Formularze do zarządzania uczniami, ocenami, obecnością  
 - Strony z przeglądem ocen, obecności i statusów  
 - Łatwiejsza obsługa niż interfejs tekstowy
 
-### 🗃️ Baza danych (SQLite)
+### Baza danych (SQLite)
 - Przechowywanie danych uczniów, ocen i obecności  
 - Zmiana z przechowywania danych w pamięci na trwałą bazę danych  
 - Wygodna integracja z SQLAlchemy (ORM)
 
-### 📈 Statystyki i analiza danych
+### Statystyki i analiza danych
 - Średnie ocen uczniów i klasy  
 - Liczba nieobecności i spóźnień  
-- Generowanie wykresów: słupkowe, kołowe, liniowe (Matplotlib/Plotly)  
-- Eksport do plików Excel (.xlsx) przy użyciu Pandas
+- Generowanie wykresów: słupkowe, kołowe, liniowe 
+- Eksport do plików Excel (.xlsx)
 
 ### ⚠️ Obsługa wyjątków
 - Nieprawidłowy PESEL  
@@ -54,17 +55,13 @@ Aby zwiększyć funkcjonalność projektu i uczynić go bardziej nowoczesnym, pr
 
 ---
 
-## 🛠 Technologie
+## Technologie
 
-- **Python 3.11+**
+- **Python 3.11**
 - **Flask** – webowy framework
 - **SQLite3 + SQLAlchemy** – baza danych i ORM
 - **Jinja2** – szablony HTML
 - **WTForms** – formularze
-- **Pandas, Openpyxl** – eksport danych do Excel
-- **Matplotlib / Plotly** – wizualizacje danych
+- **Openpyxl** – eksport danych do Excel
 - **Bootstrap** – estetyczny interfejs użytkownika
 
----
-
-## 📁 Struktura projektu
