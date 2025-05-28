@@ -8,7 +8,6 @@ from application.services.student_service import *
 from application.services.class_service import *
 from application.routes.auth import login_required
 
-
 students_bp = Blueprint("students", __name__, url_prefix="/students")
 
 
@@ -64,3 +63,9 @@ def update_student():
         return update_student_in_db(db.session, json['id'], new_student)
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+@students_bp.route('/get_all_students_for_chart', methods=['GET'])
+def api_all_students():
+    data = get_all_students(db.session)
+    return jsonify(data)

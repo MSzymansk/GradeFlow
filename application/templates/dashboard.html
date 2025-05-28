@@ -4,17 +4,24 @@
 <html>
 <head>
     <title>Panel nauczyciela</title>
-    <style>
-        body {
-            padding: 20px;
-        }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Dashboard Nauczyciela:</h1>
+<h1>Dashboard Nauczyciela</h1>
 
-    <ul>
-    </ul>
+<div class="chart-container">
+    <div class="chart-box">
+        <div class="chart-title">Średnia ocen dla klasy</div>
+        <canvas id="avgClassChart"></canvas>
+    </div>
+    <div class="chart-box">
+        <div class="chart-title">Liczba ocen w klasach</div>
+        <canvas id="gradesByClassChart"></canvas>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='dashboard_actions.js') }}"></script>
 </body>
 </html>
 {% endblock %}
