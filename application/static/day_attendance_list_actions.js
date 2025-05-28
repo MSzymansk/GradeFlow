@@ -24,33 +24,35 @@ document.addEventListener("DOMContentLoaded", () => {
         row.style.display = 'none';
     });
 });
-
 function submitAttendance() {
     const date = document.getElementById('date').value;
     const time = document.getElementById('time').value;
     const classId = document.getElementById('class-filter').value;
 
     if (classId === "brak") {
-        alert("klasę przed zapisaniem.");
+        alert("Wybierz klasę przed zapisaniem.");
         return;
     }
 
     const rows = document.querySelectorAll('tbody tr');
     const attendanceData = [];
 
-    rows.forEach(row => {
-        if (row.style.display === 'none') return;
+    for (let row of rows) {
+        if (row.style.display === 'none') continue;
 
         const studentId = row.getAttribute('data-student-id');
         const radios = row.querySelectorAll(`input[name="status_${studentId}"]`);
         let status = null;
-        radios.forEach(r => {
-            if (r.checked) status = r.value;
-        });
+        for (let r of radios) {
+            if (r.checked) {
+                status = r.value;
+                break;
+            }
+        }
 
         if (!status) {
             alert(`Nie wybrano statusu dla ucznia ID ${studentId}`);
-            return;
+            return; // przerywa całą funkcję
         }
 
         attendanceData.push({
@@ -60,7 +62,7 @@ function submitAttendance() {
             date: date,
             status: status
         });
-    });
+    }
 
     fetch("/attendance/add", {
         method: "POST",

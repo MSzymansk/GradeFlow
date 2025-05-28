@@ -172,3 +172,25 @@ function filterByClass() {
         }
     });
 }
+
+function toggleFailures(){
+    const showFailures = document.getElementById('show-failure').checked;
+    const rows = document.querySelectorAll('#students-tbody tr');
+
+    rows.forEach(row => {
+
+        const avg = row.dataset.studentAvg;
+        const isFailureAvg = parseFloat(avg) < 3;
+
+        const absece_count = parseInt(row.dataset.studentAbsence)
+        const isFaliureAbsence = absece_count > 2;
+
+
+
+        if ((showFailures && isFailureAvg) || (showFailures && isFaliureAbsence)) {
+            row.classList.add('failure-row');
+        } else {
+            row.classList.remove('failure-row');
+        }
+    });
+}

@@ -1,24 +1,32 @@
 import flask
 
-from application.database.models import Student, Grade, _Class
+from application.database.models import Student, Grade, _Class, Attendance
 from flask import jsonify, session
 from sqlalchemy import *
 
 
 def get_all_students(db_session):
-    students = db_session.query(Student).join(_Class).filter(_Class.teacher_id == session["teacher_id"]).all()
-    return [
-        {
+    students = db_session.query(Student).join(_Class)\
+    .filter(_Class.teacher_id == session['teacher_id']).all()
+
+    results = []
+
+    for student in students:
+        avg = db_session.query(func.avg(Grade.value)).filter(Grade.student_id==student.id).scalar() or 1.0
+        absence = db_session.query(func.count(Attendance.id)).filter(Attendance.student_id==student.id, Attendance.status == "nieobecny").scalar()
+
+        results.append({
             "id": student.id,
             "pesel": student.pesel,
             "name": student.name,
             "surname": student.surname,
             "class_id": student.class_id,
-            "class_name": student._class.name
-        }
-        for student in students
-    ]
+            "class_name": student._class.name,
+            "avg": avg,
+            "absence_count": absence
+        })
 
+    return results
 
 def get_all_students_class(db_session, class_id: int):
     students = db_session.query(Student).filter(Student.class_id == class_id).all()

@@ -1,6 +1,7 @@
 from datetime import date, datetime
+from io import BytesIO
 
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, send_file
 
 from application.database.models import Attendance
 from application.services import student_service
@@ -8,6 +9,7 @@ from application.services import class_service
 from application.extensions import db
 from application.routes.auth import login_required
 from application.services import attendance_service
+from openpyxl import Workbook
 
 attendance_bp = Blueprint('attendance', __name__)
 
@@ -17,7 +19,8 @@ attendance_bp = Blueprint('attendance', __name__)
 def get_lessons_list():
     session = db.session
     list_of_lessons = attendance_service.get_lessons_list(session)
-    return render_template("attendance.html", lessons=list_of_lessons)
+    classes_list = class_service.get_all_classes_from_db(db.session)
+    return render_template("attendance.html", lessons=list_of_lessons, classes=classes_list)
 
 
 
@@ -56,7 +59,7 @@ def new_lesson():
 
 @attendance_bp.route('/attendance/add',methods=['POST'])
 @login_required
-def add_grade():
+def add_attendance():
     json = request.get_json()
     try:
         for entry in json:
@@ -76,3 +79,28 @@ def add_grade():
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "error": str(e)}), 400
+
+@attendance_bp.route('/attendance/raport', methods=['GET'])
+@login_required
+def generate_raport():
+    studen_attendance_list = attendance_service.get_attendance_summary_by_teacher(db.session)
+    wb  = Workbook()
+    ws = wb.active
+    ws.title = "raport obecnosci"
+    ws.append(["ID obecnosci","Data","Godzina","Klasa","Imię","Nazwisko","Status"])
+
+    for entry in studen_attendance_list:
+        ws.append([
+            entry["id"],
+            entry["date"],
+            entry["time"],
+            entry["class"],
+            entry["student_name"],
+            entry["student_surname"],
+            entry["status"]
+        ])
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    return send_file(output,download_name="raport_uczniow.xlsx",as_attachment=True,mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")

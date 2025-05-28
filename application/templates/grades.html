@@ -1,101 +1,105 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block content %}
 
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista ocen</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+    <html lang="pl">
+    <head>
+        <meta charset="UTF-8">
+        <title>Lista ocen</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
 
-<!-- Nagłówek i filtr klasy -->
-<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-    <h1 style="margin: 0;">Lista ocen</h1>
-    <div>
-        <label for="class-filter"><strong>Klasa:</strong></label>
-        <select id="class-filter" onchange="filterByClass()">
-            <option value="all">Wszystkie</option>
-            {% for class in classes %}
-            <option value="{{ class.id }}">{{ class.name }}</option>
-            {% endfor %}
-        </select>
+    <!-- Nagłówek i filtr klasy -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+        <h1 style="margin: 0;">Lista ocen</h1>
+        <div>
+            <label for="class-filter"><strong>Klasa:</strong></label>
+            <select id="class-filter" onchange="filterByClass()">
+                <option value="all">Wszystkie</option>
+                {% for class in classes %}
+                    <option value="{{ class.id }}">{{ class.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
-</div>
+    <!-- Przycisk do otwierania formularzy -->
+    <div class="buttons">
+        <label>
+            <input type="checkbox" id="show-failure" onclick="toggleFailures()"/>
+            Pokaż zagrożenia
+        </label>
+    </div>
 
-<!-- Przycisk do otwierania formularzy -->
-<div class="buttons">
-    <label>
-        <input type="checkbox" id="show-failure" onclick="toggleFailures()"/>
-        Pokaż zagrożenia
-    </label>
-</div>
+    <!-- Modal do dodawania oceny -->
+    <div id="grade-add-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeGradeAddForm()">&times;</span>
+            <h2>Dodaj ocenę</h2>
+            <form id="grade-add-form">
+                <div class="form-group">
+                    <label for="grade-value">Wartość oceny:</label>
+                    <input type="text" id="grade-value" name="value" required>
+                </div>
+                <div class="form-group">
+                    <label for="grade-type">Typ oceny:</label>
+                    <select id="grade-type" name="type" required>
+                        <option value="" disabled selected>Wybierz typ oceny</option>
+                        <option value="Sprawdzian">Sprawdzian</option>
+                        <option value="Kartkówka">Kartkówka</option>
+                        <option value="Odpowiedź ustna">Odpowiedź ustna</option>
+                    </select>
+                </div>
+                <input type="hidden" id="hidden-student-id" name="student_id">
+                <div class="form-buttons">
+                    <button type="submit" onclick="addGradeToDb()">Dodaj</button>
+                    <button type="button" class="cancel-btn" onclick="closeGradeAddForm()">Anuluj</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<!-- Modal do dodawania oceny -->
-<div id="grade-add-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeGradeAddForm()">&times;</span>
-        <h2>Dodaj ocenę</h2>
-        <form id="grade-add-form">
-            <div class="form-group">
-                <label for="grade-value">Wartość oceny:</label>
-                <input type="text" id="grade-value" name="value" required>
-            </div>
-            <div class="form-group">
-                <label for="grade-type">Typ oceny:</label>
-                <select id="grade-type" name="type" required>
-                    <option value="" disabled selected>Wybierz typ oceny</option>
-                    <option value="Sprawdzian">Sprawdzian</option>
-                    <option value="Kartkówka">Kartkówka</option>
-                    <option value="Odpowiedź ustna">Odpowiedź ustna</option>
-                </select>
-            </div>
-            <input type="hidden" id="hidden-student-id" name="student_id">
-            <div class="form-buttons">
-                <button type="submit" onclick="addGradeToDb()">Dodaj</button>
-                <button type="button" class="cancel-btn" onclick="closeGradeAddForm()">Anuluj</button>
-            </div>
+
+    <!-- Tabela z ocenami -->
+    <table>
+        <thead>
+        <tr>
+            <th>Wystaw ocenę</th>
+            <th></th>
+            <th>Imię ucznia</th>
+            <th>Nazwisko ucznia</th>
+            <th>Nazwa klasy</th>
+            <th>Oceny</th>
+            <th>Średnia</th>
+        </tr>
+        </thead>
+        <tbody id="grades-tbody">
+        {% for grade in grades %}
+            <tr data-class-id="{{ grade.class_id }}" data-student-id="{{ grade.student_id }}">
+                <td>
+                    <button type="button" onclick="openGradeAddForm(this)">Dodaj</button>
+                </td>
+                <td>
+                    <a href="{{ url_for('grades.get_grades_details', id=grade.student_id) }}">
+                        <button type="button">Szczegóły</button>
+                    </a>
+                </td>
+                <td>{{ grade.student_name }}</td>
+                <td>{{ grade.student_surname }}</td>
+                <td>{{ grade.class_name }}</td>
+                <td>{{ grade.grades_list | join(', ') }}</td>
+                <td>{{ grade.avg_grade }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <form class="form-buttons" action="{{ url_for('grades.generate_raport') }}" method="get">
+            <button class="buttons">Pobierz raport uczniów (.xlsx)</button>
         </form>
     </div>
-</div>
+    <script src="{{ url_for('static', filename='grade_actions.js') }}"></script>
 
-
-<!-- Tabela z ocenami -->
-<table>
-    <thead>
-    <tr>
-        <th>Wystaw ocenę</th>
-        <th></th>
-        <th>Imię ucznia</th>
-        <th>Nazwisko ucznia</th>
-        <th>Nazwa klasy</th>
-        <th>Oceny</th>
-        <th>Średnia</th>
-    </tr>
-    </thead>
-    <tbody id="grades-tbody">
-    {% for grade in grades %}
-    <tr data-class-id="{{grade.class_id}}" data-student-id="{{grade.student_id}}">
-        <td>
-            <button type="button" onclick="openGradeAddForm(this)">Dodaj</button>
-        </td>
-        <td>
-            <a href="{{ url_for('grades.get_grades_details', id=grade.student_id) }}">
-                <button type="button">Szczegóły</button>
-            </a>
-        </td>
-        <td>{{ grade.student_name }}</td>
-        <td>{{ grade.student_surname }}</td>
-        <td>{{ grade.class_name }}</td>
-        <td>{{ grade.grades_list | join(', ') }}</td>
-        <td>{{ grade.avg_grade}}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<script src="{{ url_for('static', filename='grade_actions.js') }}"></script>
-
-</body>
-</html>
+    </body>
+    </html>
 {% endblock %}

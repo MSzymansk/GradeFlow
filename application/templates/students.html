@@ -1,112 +1,123 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista uczniów</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<!--Tytuł i wybór klasy-->
-<body>
-<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-    <h1 style="margin: 0;">Lista uczniów</h1>
-    <div>
-        <label for="class-filter"><strong>Klasa:</strong></label>
-        <select id="class-filter" onchange="filterByClass()">
-            <option value="all">Wszystkie</option>
-            {% for class in classes %}
-            <option value="{{ class.id }}">{{ class.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-</div>
-<!--Przycisk do odpalania fromularzy-->
-<div class="buttons">
-    <button onclick="openStudentAddForm()" style="margin-bottom: 20px;" class="open-form-button">Dodaj ucznia</button>
-    <button onclick="openStudentDeleteForm()" style="margin-bottom: 20px;" class="open-form-button">Usun ucznia</button>
-</div>
-<!--Formularz do wprowadzenia nowego ucznia-->
-<div id="student-add-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeStudentAddForm()">&times;</span>
-        <h2>Dodaj nowego ucznia</h2>
-        <form id="student-add-form">
-            <div class="form-group">
-                <label for="student-name">Imię:</label>
-                <input type="text" id="student-name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="student-surname">Nazwisko:</label>
-                <input type="text" id="student-surname" name="surname" required>
-            </div>
-            <div class="form-group">
-                <label for="student-pesel">PESEL:</label>
-                <input type="text" id="student-pesel" name="pesel" required>
-            </div>
-            <div class="form-group">
-                <select id="class-id" name="class_id" required>
-                    <option value="" disabled selected>Wybierz klase</option>
-                    {% for class in classes %}
+    <html lang="pl">
+    <head>
+        <meta charset="UTF-8">
+        <title>Lista uczniów</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <!--Tytuł i wybór klasy-->
+    <body>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+        <h1 style="margin: 0;">Lista uczniów</h1>
+        <div>
+            <label for="class-filter"><strong>Klasa:</strong></label>
+            <select id="class-filter" onchange="filterByClass()">
+                <option value="all">Wszystkie</option>
+                {% for class in classes %}
                     <option value="{{ class.id }}">{{ class.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-buttons">
-                <button type="submit" onclick="addStudentToDb()">Dodaj</button>
-                <button type="button" class="cancel-btn" onclick="closeStudentAddForm()">Anuluj</button>
-            </div>
-        </form>
+                {% endfor %}
+            </select>
+        </div>
     </div>
-</div>
-<!--Fromularz do usuniecia ucznia-->
-<div id="student-delete-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeStudentDeleteForm()">&times;</span>
-        <h2>Usun ucznia</h2>
-        <form id="student-delete-form">
-            <div class="form-group">
-                <label for="student-id">ID:</label>
-                <input type="text" id="student-id" name="id" required>
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <!--Przycisk do odpalania fromularzy-->
+        <div class="buttons">
+            <button onclick="openStudentAddForm()" style="margin-bottom: 20px;" class="open-form-button">Dodaj ucznia
+            </button>
+            <button onclick="openStudentDeleteForm()" style="margin-bottom: 20px;" class="open-form-button">Usun ucznia
+            </button>
+        </div>
+        <!--Formularz do wprowadzenia nowego ucznia-->
+        <div id="student-add-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeStudentAddForm()">&times;</span>
+                <h2>Dodaj nowego ucznia</h2>
+                <form id="student-add-form">
+                    <div class="form-group">
+                        <label for="student-name">Imię:</label>
+                        <input type="text" id="student-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-surname">Nazwisko:</label>
+                        <input type="text" id="student-surname" name="surname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-pesel">PESEL:</label>
+                        <input type="text" id="student-pesel" name="pesel" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="class-id" name="class_id" required>
+                            <option value="" disabled selected>Wybierz klase</option>
+                            {% for class in classes %}
+                                <option value="{{ class.id }}">{{ class.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" onclick="addStudentToDb()">Dodaj</button>
+                        <button type="button" class="cancel-btn" onclick="closeStudentAddForm()">Anuluj</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-buttons">
-                <button type="button" class="cancel-btn" onclick="deleteStudentFromDb()">Usun</button>
+        </div>
+        <!--Fromularz do usuniecia ucznia-->
+        <div id="student-delete-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeStudentDeleteForm()">&times;</span>
+                <h2>Usun ucznia</h2>
+                <form id="student-delete-form">
+                    <div class="form-group">
+                        <label for="student-id">ID:</label>
+                        <input type="text" id="student-id" name="id" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="cancel-btn" onclick="deleteStudentFromDb()">Usun</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+        <div class="checkbox">
+            <label style="padding-bottom: 8px;">
+                <input type="checkbox" id="show-failure" onclick="toggleFailures()"/>
+                Pokaż zagrożenia
+            </label>
+        </div>
     </div>
-</div>
-<!--tabela z danymi-->
-<table>
-    <thead>
-    <tr>
-        <th></th>
-        <th>ID</th>
-        <th>Imię</th>
-        <th>Nazwisko</th>
-        <th>PESEL</th>
-        <th>Nazwa klasy</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for student in students %}
-    <tr data-student-id="{{ student.id }}" data-class-id="{{ student.class_id }}">
-        <td>
-            <button onclick="enableEdit(this)">Edytuj</button>
-        </td>
-        <td>{{ student.id }}</td>
-        <td>{{ student.name }}</td>
-        <td>{{ student.surname }}</td>
-        <td>{{ student.pesel }}</td>
-        <td>{{ student.class_name }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
 
-<!--Odniesienie do pliku student_actions.js-->
-<script src="{{ url_for('static', filename='student_actions.js') }}"></script>
+    <!--tabela z danymi-->
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>PESEL</th>
+            <th>Nazwa klasy</th>
+        </tr>
+        </thead>
+        <tbody id="students-tbody">
+        {% for student in students %}
+            <tr data-student-id="{{ student.id }}" data-class-id="{{ student.class_id }}" data-student-avg="{{ student.avg }}" data-student-absence="{{ student.absence_count }}">
+                <td>
+                    <button onclick="enableEdit(this)">Edytuj</button>
+                </td>
+                <td>{{ student.id }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.surname }}</td>
+                <td>{{ student.pesel }}</td>
+                <td>{{ student.class_name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-</body>
-</html>
+    <!--Odniesienie do pliku student_actions.js-->
+    <script src="{{ url_for('static', filename='student_actions.js') }}"></script>
 
-{% endblock%}
+    </body>
+    </html>
+
+{% endblock %}

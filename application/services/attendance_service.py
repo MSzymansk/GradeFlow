@@ -7,40 +7,18 @@ from sqlalchemy.orm import selectinload
 
 
 def get_attendance_summary_by_teacher(db_session):
-    classes = db_session.query(_Class) \
-        .options(
-        selectinload(_Class.students).selectinload(Student.attendances)
-    ) \
-        .filter(_Class.teacher_id == session["teacher_id"]) \
-        .all()
+    attendances = db_session.query(Attendance).all()
 
-    result = []
-
-    for clas in classes:
-        class_data = {
-            "classId": clas.id,
-            "className": clas.name,
-            "students": []
-        }
-
-        for student in clas.students:
-            attendances = student.attendances
-            class_attendances = [a for a in attendances if a.class_id == clas.id]
-
-            present_count = sum(1 for a in class_attendances if a.status == "Present")
-            absent_count = sum(1 for a in class_attendances if a.status == "Absent")
-            late_count = sum(1 for a in class_attendances if a.status == "Late")
-
-            class_data["students"].append({
-                "studentId": student.id,
-                "studentName": student.name,
-                "studentSurname": student.surname,
-                "present": present_count,
-                "absent": absent_count,
-                "late": late_count
-            })
-
-        result.append(class_data)
+    result = [{
+        "id":attendance.id,
+        "date":attendance.date.strftime("%Y-%m-%d"),
+        "time":attendance.time.strftime("%H:%M"),
+        "class": attendance._class.name,
+        "student_name":attendance.student.name,
+        "student_surname" : attendance.student.surname,
+        "status": attendance.status,
+    }
+    for attendance in attendances]
 
     return result
 
@@ -83,12 +61,13 @@ def get_lessons_list(db_session):
         result_set.add((
             lesson.date.isoformat(),
             lesson.time.strftime("%H:%M"),
-            lesson._class.name
+            lesson._class.name,
+            lesson._class.id
         ))
 
     result = [
-        {"data": date, "godzina": time, "klasa": class_name}
-        for (date, time, class_name) in sorted(result_set)
+        {"data": date, "godzina": time, "klasa": class_name, "class_id":class_id}
+        for (date, time, class_name,class_id) in sorted(result_set)
     ]
 
     return result
