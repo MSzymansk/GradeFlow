@@ -1,5 +1,8 @@
 # Michał Szymański & Julian Pulawski c31
 
+#Login: jan@gradeflow.pl hasło: jan
+#Login: anna@gradeflow.pl hasło: anna
+
 # GradeFlow: Dziennik Nauczyciela
 
 ## Wymagania projektowe
