@@ -66,6 +66,7 @@ def add_grade():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
 @grades_bp.route('/raport', methods=['GET'])
 @login_required
 def generate_raport():
@@ -94,7 +95,6 @@ def generate_raport():
             round(student["avg_grade"], 2)
         ])
 
-
     output = BytesIO()
     wb.save(output)
     output.seek(0)
@@ -103,3 +103,9 @@ def generate_raport():
                      download_name="raport_uczniow.xlsx",
                      as_attachment=True,
                      mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+
+@grades_bp.route('/get_grades_for_chart',  methods=['GET'])
+def api_all_grades_students_classes():
+    data = get_all_grades_students_classes(db.session)
+    return jsonify(data)
