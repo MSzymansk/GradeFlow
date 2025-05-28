@@ -11,6 +11,8 @@ from werkzeug.security import generate_password_hash
 from application.extensions import db
 from application.database.models import Teacher, _Class, Student, Grade, Attendance
 
+
+#vini vidi vici
 def seed_data():
     if Teacher.query.first():
         return
