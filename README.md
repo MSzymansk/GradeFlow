@@ -1,23 +1,22 @@
 # Michał Szymański & Julian Pulawski c31
 
-# GradeFlow
-# Projekt 4: Dziennik Nauczyciela
+# GradeFlow: Dziennik Nauczyciela
 
 ## Wymagania projektowe
 
-- ✅ Dodanie/usuwanie/edycja ucznia z imieniem, nazwiskiem i PESELEM  
-- ✅ Sprawdzanie listy obecności (obecny, nieobecny, usprawiedliwiony, spóźniony)  
-- ✅ Wystawianie ocen za: pracę domową, kartkówki, sprawdziany  
-- ✅ Edycja ocen i obecności w danym dniu  
-- ✅ Podgląd ocen i obecności wybranego ucznia  
-- ✅ Wystawianie zagrożeń (więcej niż 2 nieobecności, spóźnienia na połowie lekcji, średnia < 3)  
-- ✅ Metoda obliczająca średnią ucznia  
-- ✅ Metoda sprawdzająca status ucznia (zagrożony / niezagrożony)  
-- ✅ Generowanie raportów z ocen i obecności (XLSX)  
-- ✅ Generowanie statystyk i wykresów 
-- ✅ Przykładowy dziennik 
-- ✅ Obsługa wyjątków  
-- ✅ Prosty interfejs użytkownika  
+- Dodanie/usuwanie/edycja ucznia z imieniem, nazwiskiem i PESELEM  
+- Sprawdzanie listy obecności (obecny, nieobecny, usprawiedliwiony, spóźniony)  
+- Wystawianie ocen za: pracę domową, kartkówki, sprawdziany  
+- Edycja ocen i obecności w danym dniu  
+- Podgląd ocen i obecności wybranego ucznia  
+- Wystawianie zagrożeń (więcej niż 2 nieobecności, spóźnienia na połowie lekcji, średnia < 3)  
+- Metoda obliczająca średnią ucznia  
+- Metoda sprawdzająca status ucznia (zagrożony / niezagrożony)  
+- Generowanie raportów z ocen i obecności (XLSX)  
+- Generowanie statystyk i wykresów 
+- Przykładowy dziennik 
+- Obsługa wyjątków  
+- Prosty interfejs użytkownika  
 
 ---
 
