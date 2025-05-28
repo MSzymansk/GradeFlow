@@ -40,7 +40,7 @@ Aby zwiększyć funkcjonalność projektu i uczynić go bardziej nowoczesnym, pr
 - Generowanie wykresów: słupkowe, kołowe, liniowe 
 - Eksport do plików Excel (.xlsx)
 
-### ⚠️ Obsługa wyjątków
+### Obsługa wyjątków
 - Nieprawidłowy PESEL  
 - Duplikaty uczniów  
 - Błędy formularzy (brak danych)  
